@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ad-generator · Hindi & English ads for Indian D2C brands</title>
+  <meta name="description" content="AI-powered ad creatives with native Hindi copy, festival templates, and product photo composites. Built for Indian D2C brands." />
+
+  <!-- fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,300..700,30..100&family=Manrope:wght@400;500;600;700&family=Tiro+Devanagari+Hindi&family=JetBrains+Mono:wght@400;500&display=swap"
+    rel="stylesheet"
+  />
+
+  <link rel="stylesheet" href="assets/css/main.css" />
+
+  <style>
+    /* ============================================================
+       landing-specific styles
+       ============================================================ */
+
+    /* hero */
+    .hero {
+      padding: var(--s-10) 0 var(--s-9);
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -10%;
+      right: -8%;
+      width: 480px;
+      height: 480px;
+      background: radial-gradient(circle, rgba(217, 119, 6, 0.12), transparent 65%);
+      filter: blur(20px);
+      z-index: 0;
+      pointer-events: none;
+    }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 1fr;
+      gap: var(--s-8);
+      align-items: center;
+      position: relative;
+      z-index: 1;
+    }
+    .hero-eyebrow {
+      display: flex;
+      align-items: center;
+      gap: var(--s-3);
+      margin-bottom: var(--s-5);
+    }
+    .hero-eyebrow::before {
+      content: '';
+      width: 24px;
+      height: 1px;
+      background: var(--marigold-deep);
+    }
+    .hero h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2.4rem, 5.2vw, 4.4rem);
+      font-weight: 400;
+      line-height: 0.98;
+      letter-spacing: -0.025em;
+      margin-bottom: var(--s-5);
+      font-variation-settings: 'opsz' 144, 'SOFT' 30;
+    }
+    .hero h1 .deva {
+      color: var(--marigold-deep);
+      font-style: normal;
+    }
+    .hero h1 em {
+      font-style: italic;
+      font-variation-settings: 'opsz' 144, 'SOFT' 100;
+    }
+    .hero p.lede {
+      font-size: 19px;
+      line-height: 1.5;
+      color: var(--ink-soft);
+      margin-bottom: var(--s-6);
+      max-width: 28em;
+    }
+    .hero-cta {
+      display: flex;
+      gap: var(--s-3);
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .hero-meta {
+      margin-top: var(--s-6);
+      display: flex;
+      gap: var(--s-5);
+      font-family: var(--font-mono);
+      font-size: 12px;
+      letter-spacing: 0.05em;
+      color: var(--ink-mute);
+    }
+    .hero-meta span::before {
+      content: '·';
+      margin-right: var(--s-3);
+      color: var(--marigold);
+    }
+    .hero-meta span:first-child::before { display: none; }
+
+    /* hero visual · mock ad preview stack */
+    .hero-visual {
+      position: relative;
+      aspect-ratio: 1;
+      max-width: 460px;
+      margin-left: auto;
+    }
+    .mock-ad {
+      position: absolute;
+      width: 75%;
+      aspect-ratio: 1;
+      background: var(--paper-2);
+      border: 1px solid var(--line);
+      border-radius: var(--r-md);
+      box-shadow: var(--shadow-2);
+      overflow: hidden;
+      transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+    .mock-ad-1 {
+      top: 0; left: 0;
+      transform: rotate(-4deg);
+      z-index: 1;
+      background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+    }
+    .mock-ad-2 {
+      top: 12%; right: 0;
+      transform: rotate(3deg);
+      z-index: 2;
+      background: linear-gradient(135deg, #d8e3d2 0%, #a7c6a4 100%);
+    }
+    .mock-ad-3 {
+      bottom: 0; left: 12%;
+      transform: rotate(-1deg);
+      z-index: 3;
+      background: linear-gradient(135deg, #fbcfe8 0%, #f9a8d4 100%);
+    }
+    .hero-visual:hover .mock-ad-1 { transform: rotate(-7deg) translate(-8px, -8px); }
+    .hero-visual:hover .mock-ad-2 { transform: rotate(5deg) translate(8px, -4px); }
+    .hero-visual:hover .mock-ad-3 { transform: rotate(-2deg) translate(-4px, 8px); }
+    .mock-content {
+      position: absolute;
+      inset: 14% 12% 14% 12%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .mock-headline {
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 500;
+      line-height: 1.05;
+      color: var(--ink);
+    }
+    .mock-headline.deva {
+      font-family: var(--font-deva);
+      font-size: 24px;
+    }
+    .mock-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--ink-soft);
+    }
+    .mock-cta-pill {
+      background: var(--ink);
+      color: var(--paper);
+      padding: 0.3rem 0.7rem;
+      border-radius: 999px;
+      font-size: 9px;
+    }
+
+    /* sections */
+    .section {
+      padding: var(--s-9) 0;
+      position: relative;
+    }
+    .section-head {
+      max-width: 720px;
+      margin-bottom: var(--s-7);
+    }
+    .section h2 {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 3.6vw, 2.8rem);
+      font-weight: 400;
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      margin: var(--s-3) 0 var(--s-4);
+    }
+    .section h2 em {
+      font-style: italic;
+      color: var(--marigold-deep);
+    }
+    .section .intro {
+      font-size: 18px;
+      color: var(--ink-soft);
+      max-width: 36em;
+    }
+
+    /* how-it-works */
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--s-5);
+      counter-reset: step;
+    }
+    .step {
+      counter-increment: step;
+      padding: var(--s-5);
+      border-top: 2px solid var(--ink);
+      position: relative;
+    }
+    .step::before {
+      content: counter(step, decimal-leading-zero);
+      font-family: var(--font-mono);
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      color: var(--marigold-deep);
+      display: block;
+      margin-bottom: var(--s-3);
+    }
+    .step h3 {
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 500;
+      margin-bottom: var(--s-3);
+      letter-spacing: -0.01em;
+    }
+    .step p {
+      color: var(--ink-soft);
+      font-size: 15px;
+      line-height: 1.55;
+    }
+
+    /* features · why-this-not-canva */
+    .why {
+      background: var(--paper-2);
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+    .why-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--s-7);
+      align-items: start;
+    }
+    .why-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: var(--s-5);
+    }
+    .why-list li {
+      padding-left: var(--s-5);
+      position: relative;
+      border-left: 2px solid var(--marigold);
+    }
+    .why-list h4 {
+      font-family: var(--font-display);
+      font-size: 19px;
+      font-weight: 500;
+      margin-bottom: var(--s-2);
+    }
+    .why-list p {
+      color: var(--ink-soft);
+      font-size: 15px;
+    }
+
+    /* footer */
+    .foot {
+      padding: var(--s-7) 0 var(--s-6);
+      border-top: 1px solid var(--line);
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--ink-mute);
+    }
+    .foot-inner {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: var(--s-4);
+    }
+
+    /* fade-in load animation */
+    .reveal {
+      opacity: 0;
+      transform: translateY(12px);
+      animation: reveal 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+    }
+    .reveal-1 { animation-delay: 0.05s; }
+    .reveal-2 { animation-delay: 0.18s; }
+    .reveal-3 { animation-delay: 0.32s; }
+    .reveal-4 { animation-delay: 0.46s; }
+    @keyframes reveal {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* responsive */
+    @media (max-width: 880px) {
+      .hero-grid { grid-template-columns: 1fr; gap: var(--s-7); }
+      .hero-visual { max-width: 360px; margin: 0 auto; }
+      .steps { grid-template-columns: 1fr; }
+      .why-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- nav -->
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="/" class="brand">
+        <span class="brand-dot"></span>
+        ad-generator
+        <span class="brand-deva">·विज्ञापन</span>
+      </a>
+      <a href="app/" class="btn btn-ghost btn-sm">Try free →</a>
+    </div>
+  </nav>
+
+  <!-- hero -->
+  <header class="hero">
+    <div class="wrap">
+      <div class="hero-grid">
+        <div>
+          <div class="hero-eyebrow reveal reveal-1">
+            <span class="eyebrow">For Indian D2C brands</span>
+          </div>
+          <h1 class="reveal reveal-2">
+            Ads in <span class="deva">हिंदी</span> &amp; English.<br />
+            <em>That don't sound translated.</em>
+          </h1>
+          <p class="lede reveal reveal-3">
+            AI-powered ad creatives with native Hindi copy, festival templates,
+            and product photo composites. Built for the brands global tools
+            never quite get.
+          </p>
+          <div class="hero-cta reveal reveal-4">
+            <a href="app/" class="btn btn-primary">Generate your first ad →</a>
+            <span class="text-mute" style="font-size: 14px">No signup. Free to try.</span>
+          </div>
+          <div class="hero-meta reveal reveal-4">
+            <span>Instagram-ready</span>
+            <span>Native Hindi copy</span>
+            <span>Your product photos</span>
+          </div>
+        </div>
+
+        <!-- mock ad stack -->
+        <div class="hero-visual reveal reveal-3">
+          <div class="mock-ad mock-ad-1">
+            <div class="mock-content">
+              <div class="mock-headline">Glow,<br />redefined.</div>
+              <div class="mock-bottom">
+                <span>Skincare · IG</span>
+                <span class="mock-cta-pill">Shop now</span>
+              </div>
+            </div>
+          </div>
+          <div class="mock-ad mock-ad-2">
+            <div class="mock-content">
+              <div class="mock-headline deva">एक लो,<br />एक फ्री।</div>
+              <div class="mock-bottom">
+                <span>Diwali sale</span>
+                <span class="mock-cta-pill">अभी खरीदें</span>
+              </div>
+            </div>
+          </div>
+          <div class="mock-ad mock-ad-3">
+            <div class="mock-content">
+              <div class="mock-headline">Festival<br />drop.</div>
+              <div class="mock-bottom">
+                <span>New arrival</span>
+                <span class="mock-cta-pill">Order COD</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- how it works -->
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">How it works</span>
+        <h2>From product photo to <em>scroll-stopper</em>, in under a minute.</h2>
+      </div>
+
+      <div class="steps">
+        <div class="step">
+          <h3>Upload your product</h3>
+          <p>
+            Drop a photo of your face wash, kurta, candle — anything. We
+            remove the background automatically.
+          </p>
+        </div>
+        <div class="step">
+          <h3>Pick template &amp; language</h3>
+          <p>
+            Choose Festival Sale, Product Launch, Discount, New Arrival, or
+            Testimonial. Hindi or English.
+          </p>
+        </div>
+        <div class="step">
+          <h3>Edit copy, download</h3>
+          <p>
+            AI writes a native-feeling headline. Tweak it, hit generate,
+            download a 1080×1080 PNG ready for Instagram.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- why this -->
+  <section class="section why">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">What makes this different</span>
+        <h2>Built for India. Not <em>localized</em> from somewhere else.</h2>
+      </div>
+
+      <div class="why-grid">
+        <div>
+          <p class="intro">
+            Canva's Hindi templates are an afterthought. AdCreative.ai speaks
+            English. Most "AI ad" tools generate generic American-feeling
+            copy and call it a day.
+          </p>
+          <p class="intro" style="margin-top: var(--s-4)">
+            We're starting where India's D2C brands actually live —
+            Instagram-first, COD-friendly, festival-driven, and bilingual.
+          </p>
+        </div>
+
+        <ul class="why-list">
+          <li>
+            <h4>Native Hindi, not Sanskritized</h4>
+            <p>"एक लो, एक फ्री" — not "एक खरीदें, एक प्राप्त करें". AI seeded with real D2C copy patterns.</p>
+          </li>
+          <li>
+            <h4>Your real product photos</h4>
+            <p>AI generates the background scene; we composite your actual product on top. No fake mockups.</p>
+          </li>
+          <li>
+            <h4>Indian D2C contexts</h4>
+            <p>COD pricing, EMI badges, "Made in India," festival timing — built in, not bolted on.</p>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- final CTA -->
+  <section class="section">
+    <div class="wrap-narrow" style="text-align: center">
+      <h2 style="font-size: clamp(2rem, 4vw, 3rem)">
+        Make one. <em>See the difference.</em>
+      </h2>
+      <p class="intro" style="margin: var(--s-4) auto var(--s-6); max-width: 28em">
+        It's free to try. No signup. No credit card. Just upload a product
+        photo and see what comes out.
+      </p>
+      <a href="app/" class="btn btn-primary" style="font-size: 16px; padding: 1rem 2rem">
+        Generate your first ad →
+      </a>
+    </div>
+  </section>
+
+  <!-- footer -->
+  <footer class="foot">
+    <div class="wrap">
+      <div class="foot-inner">
+        <span>ad-generator · MVP · 2026</span>
+        <span>made in <span class="deva" style="color: var(--marigold-deep)">भारत</span> · for भारत</span>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
