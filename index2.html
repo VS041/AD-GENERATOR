@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ad-generator · create</title>
+  <meta name="description" content="Generate Hindi & English ads for your D2C brand." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,300..700,30..100&family=Manrope:wght@400;500;600;700&family=Tiro+Devanagari+Hindi&family=JetBrains+Mono:wght@400;500&display=swap"
+    rel="stylesheet"
+  />
+
+  <link rel="stylesheet" href="../assets/css/main.css" />
+
+  <style>
+    /* ============================================================
+       app-specific styles
+       ============================================================ */
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .app-shell {
+      flex: 1;
+      display: grid;
+      grid-template-columns: minmax(380px, 460px) 1fr;
+      gap: 0;
+      max-width: 1400px;
+      margin: 0 auto;
+      width: 100%;
+      min-height: calc(100vh - 64px);
+    }
+
+    /* left · controls panel */
+    .controls {
+      padding: var(--s-6) var(--s-5);
+      border-right: 1px solid var(--line);
+      background: var(--paper);
+      overflow-y: auto;
+      max-height: calc(100vh - 64px);
+    }
+    .controls h1 {
+      font-family: var(--font-display);
+      font-size: 28px;
+      font-weight: 500;
+      letter-spacing: -0.02em;
+      margin-bottom: var(--s-2);
+    }
+    .controls h1 em {
+      font-style: italic;
+      color: var(--marigold-deep);
+    }
+    .controls > .lede {
+      color: var(--ink-soft);
+      font-size: 15px;
+      margin-bottom: var(--s-6);
+    }
+
+    .step-block {
+      margin-bottom: var(--s-6);
+    }
+    .step-label {
+      display: flex;
+      align-items: center;
+      gap: var(--s-3);
+      margin-bottom: var(--s-3);
+    }
+    .step-num {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--ink);
+      color: var(--paper);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 500;
+    }
+    .step-block.is-active .step-num { background: var(--marigold-deep); }
+    .step-block.is-done .step-num { background: var(--tulsi); }
+    .step-title {
+      font-family: var(--font-display);
+      font-size: 18px;
+      font-weight: 500;
+      letter-spacing: -0.01em;
+    }
+
+    /* template grid */
+    .template-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--s-3);
+    }
+    .template-card {
+      padding: var(--s-4);
+      border: 1px solid var(--line-strong);
+      border-radius: var(--r-md);
+      background: var(--paper);
+      cursor: pointer;
+      transition: all 0.15s ease;
+      text-align: left;
+      font: inherit;
+      color: inherit;
+    }
+    .template-card:hover {
+      border-color: var(--ink);
+      transform: translateY(-1px);
+    }
+    .template-card.is-selected {
+      border-color: var(--marigold-deep);
+      background: var(--marigold-soft);
+      box-shadow: 0 0 0 1px var(--marigold-deep) inset;
+    }
+    .template-icon {
+      font-size: 22px;
+      margin-bottom: var(--s-2);
+      display: block;
+    }
+    .template-name {
+      font-weight: 600;
+      font-size: 14px;
+      margin-bottom: 2px;
+    }
+    .template-desc {
+      font-size: 12px;
+      color: var(--ink-soft);
+      line-height: 1.4;
+    }
+
+    /* language toggle */
+    .lang-toggle {
+      display: flex;
+      gap: 0;
+      border: 1px solid var(--line-strong);
+      border-radius: var(--r-md);
+      padding: 3px;
+      background: var(--paper-2);
+    }
+    .lang-btn {
+      flex: 1;
+      padding: 0.55rem;
+      border-radius: 3px;
+      text-align: center;
+      font-weight: 600;
+      font-size: 14px;
+      transition: all 0.15s ease;
+      cursor: pointer;
+    }
+    .lang-btn.is-selected {
+      background: var(--ink);
+      color: var(--paper);
+    }
+    .lang-btn .deva {
+      font-family: var(--font-deva);
+      font-size: 16px;
+    }
+
+    /* upload */
+    .upload-zone {
+      border: 1.5px dashed var(--line-strong);
+      border-radius: var(--r-md);
+      padding: var(--s-6) var(--s-4);
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      background: var(--paper-2);
+    }
+    .upload-zone:hover, .upload-zone.is-drag {
+      border-color: var(--marigold-deep);
+      background: var(--marigold-soft);
+    }
+    .upload-zone.has-file {
+      padding: var(--s-3);
+      text-align: left;
+    }
+    .upload-icon {
+      font-size: 28px;
+      margin-bottom: var(--s-2);
+      color: var(--ink-mute);
+    }
+    .upload-text {
+      font-size: 14px;
+      color: var(--ink-soft);
+    }
+    .upload-text strong {
+      color: var(--ink);
+      font-weight: 600;
+    }
+    .upload-preview {
+      display: flex;
+      align-items: center;
+      gap: var(--s-3);
+    }
+    .upload-preview img {
+      width: 56px;
+      height: 56px;
+      object-fit: cover;
+      border-radius: var(--r-sm);
+      border: 1px solid var(--line);
+    }
+    .upload-meta {
+      font-size: 13px;
+    }
+    .upload-meta strong {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+    .upload-meta span {
+      color: var(--ink-soft);
+      font-size: 12px;
+    }
+    .upload-clear {
+      margin-left: auto;
+      font-size: 12px;
+      color: var(--ink-mute);
+      padding: var(--s-1) var(--s-2);
+    }
+    .upload-clear:hover { color: var(--rose); }
+    #file-input { display: none; }
+
+    /* text inputs */
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: var(--s-2);
+    }
+    .input-group + .input-group { margin-top: var(--s-3); }
+    .input-label {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--ink-soft);
+    }
+    .text-input {
+      padding: 0.65rem 0.85rem;
+      border: 1px solid var(--line-strong);
+      border-radius: var(--r-md);
+      background: var(--paper);
+      font-size: 15px;
+      transition: border-color 0.15s ease;
+      width: 100%;
+    }
+    .text-input:focus {
+      outline: none;
+      border-color: var(--ink);
+    }
+    .text-input.is-deva {
+      font-family: var(--font-deva);
+      font-size: 17px;
+    }
+    .input-hint {
+      font-size: 12px;
+      color: var(--ink-mute);
+      margin-top: 2px;
+    }
+
+    /* generate button */
+    .generate-bar {
+      position: sticky;
+      bottom: 0;
+      background: var(--paper);
+      padding: var(--s-4) 0 0;
+      margin-top: var(--s-6);
+      border-top: 1px solid var(--line);
+    }
+    .generate-bar .btn {
+      width: 100%;
+      justify-content: center;
+      padding: 1rem 1.5rem;
+      font-size: 15px;
+    }
+    .generate-bar .btn[disabled] {
+      opacity: 0.4;
+      cursor: not-allowed;
+      transform: none !important;
+      background: var(--ink-mute);
+    }
+    .generate-status {
+      font-size: 12px;
+      color: var(--ink-mute);
+      text-align: center;
+      margin-top: var(--s-3);
+      font-family: var(--font-mono);
+      letter-spacing: 0.05em;
+    }
+
+    /* right · preview */
+    .preview {
+      padding: var(--s-7) var(--s-5);
+      background: var(--paper-2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: var(--s-4);
+      position: relative;
+      overflow: hidden;
+    }
+    .preview::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(var(--line) 1px, transparent 1px),
+        linear-gradient(90deg, var(--line) 1px, transparent 1px);
+      background-size: 24px 24px;
+      opacity: 0.4;
+      pointer-events: none;
+    }
+    .preview-canvas {
+      width: min(560px, 90%);
+      aspect-ratio: 1;
+      background: var(--paper);
+      border-radius: var(--r-md);
+      box-shadow: var(--shadow-2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: var(--s-3);
+      position: relative;
+      z-index: 1;
+      overflow: hidden;
+    }
+    .preview-empty {
+      text-align: center;
+      padding: var(--s-6);
+      color: var(--ink-mute);
+    }
+    .preview-empty .icon {
+      font-size: 42px;
+      margin-bottom: var(--s-3);
+      opacity: 0.4;
+    }
+    .preview-empty h3 {
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 500;
+      color: var(--ink-soft);
+      margin-bottom: var(--s-2);
+    }
+    .preview-empty p {
+      font-size: 14px;
+      max-width: 24em;
+      margin: 0 auto;
+      line-height: 1.5;
+    }
+    .preview-meta {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      color: var(--ink-mute);
+      text-transform: uppercase;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* responsive */
+    @media (max-width: 880px) {
+      .app-shell {
+        grid-template-columns: 1fr;
+      }
+      .controls {
+        max-height: none;
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+      }
+      .preview {
+        min-height: 70vh;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- nav · slim version -->
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="../" class="brand">
+        <span class="brand-dot"></span>
+        ad-generator
+        <span class="brand-deva">·विज्ञापन</span>
+      </a>
+      <a href="../" class="btn btn-ghost btn-sm">← Home</a>
+    </div>
+  </nav>
+
+  <!-- app shell -->
+  <div class="app-shell">
+
+    <!-- LEFT · controls -->
+    <aside class="controls">
+      <h1>Create your <em>ad</em></h1>
+      <p class="lede">Five steps. Roughly 30 seconds.</p>
+
+      <!-- 1 · template -->
+      <div class="step-block is-active" data-step="template">
+        <div class="step-label">
+          <span class="step-num">1</span>
+          <span class="step-title">Pick a template</span>
+        </div>
+        <div class="template-grid" id="template-grid">
+          <button class="template-card" data-template="festival">
+            <span class="template-icon">🪔</span>
+            <div class="template-name">Festival Sale</div>
+            <div class="template-desc">Diwali, Holi, Eid drops</div>
+          </button>
+          <button class="template-card" data-template="launch">
+            <span class="template-icon">🚀</span>
+            <div class="template-name">Product Launch</div>
+            <div class="template-desc">New product reveal</div>
+          </button>
+          <button class="template-card" data-template="discount">
+            <span class="template-icon">🏷️</span>
+            <div class="template-name">Discount</div>
+            <div class="template-desc">Flat-off, BOGO offers</div>
+          </button>
+          <button class="template-card" data-template="arrival">
+            <span class="template-icon">✨</span>
+            <div class="template-name">New Arrival</div>
+            <div class="template-desc">Just-dropped collection</div>
+          </button>
+          <button class="template-card" data-template="testimonial" style="grid-column: 1 / -1">
+            <span class="template-icon">💬</span>
+            <div class="template-name">Testimonial</div>
+            <div class="template-desc">Customer review highlight</div>
+          </button>
+        </div>
+      </div>
+
+      <!-- 2 · language -->
+      <div class="step-block" data-step="language">
+        <div class="step-label">
+          <span class="step-num">2</span>
+          <span class="step-title">Language</span>
+        </div>
+        <div class="lang-toggle" id="lang-toggle">
+          <button class="lang-btn is-selected" data-lang="en">English</button>
+          <button class="lang-btn" data-lang="hi"><span class="deva">हिंदी</span></button>
+        </div>
+      </div>
+
+      <!-- 3 · upload -->
+      <div class="step-block" data-step="upload">
+        <div class="step-label">
+          <span class="step-num">3</span>
+          <span class="step-title">Product photo</span>
+        </div>
+        <label class="upload-zone" id="upload-zone" for="file-input">
+          <div id="upload-empty">
+            <div class="upload-icon">📷</div>
+            <div class="upload-text">
+              <strong>Click to upload</strong> or drag &amp; drop
+            </div>
+            <div class="upload-text" style="font-size: 12px; margin-top: 0.4rem">
+              JPG or PNG · max 5 MB
+            </div>
+          </div>
+          <div id="upload-preview" class="upload-preview" style="display: none">
+            <img id="upload-img" src="" alt="" />
+            <div class="upload-meta">
+              <strong id="upload-name">file.jpg</strong>
+              <span id="upload-size">0 KB</span>
+            </div>
+            <button type="button" class="upload-clear btn-ghost" id="upload-clear">Remove</button>
+          </div>
+        </label>
+        <input type="file" id="file-input" accept="image/jpeg,image/png" />
+      </div>
+
+      <!-- 4 · copy inputs -->
+      <div class="step-block" data-step="copy">
+        <div class="step-label">
+          <span class="step-num">4</span>
+          <span class="step-title">Headline &amp; CTA</span>
+        </div>
+        <div class="input-group">
+          <label class="input-label" for="headline">Headline</label>
+          <input class="text-input" id="headline" type="text" maxlength="40"
+                 placeholder="Leave blank — AI will write one for you" />
+          <span class="input-hint">Optional. AI suggests if empty.</span>
+        </div>
+        <div class="input-group">
+          <label class="input-label" for="cta">Call-to-action</label>
+          <input class="text-input" id="cta" type="text" maxlength="20"
+                 placeholder="Shop now" value="Shop now" />
+        </div>
+      </div>
+
+      <!-- 5 · generate -->
+      <div class="generate-bar">
+        <button class="btn btn-primary" id="generate-btn" disabled>
+          <span id="generate-text">Pick a template &amp; upload to begin</span>
+        </button>
+        <div class="generate-status" id="generate-status">Ready · ~₹1 per generation</div>
+      </div>
+    </aside>
+
+    <!-- RIGHT · preview -->
+    <main class="preview">
+      <div class="preview-canvas" id="preview-canvas">
+        <div class="preview-empty" id="preview-empty">
+          <div class="icon">🖼</div>
+          <h3>Your ad appears here</h3>
+          <p>
+            Pick a template, upload a product photo, and hit generate. Output is
+            1080×1080 — Instagram square.
+          </p>
+        </div>
+      </div>
+      <div class="preview-meta">1080 × 1080 · Instagram square</div>
+    </main>
+
+  </div>
+
+  <script src="../assets/js/app.js"></script>
+</body>
+</html>
