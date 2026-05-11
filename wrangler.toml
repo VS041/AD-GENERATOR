@@ -1,0 +1,60 @@
+#:schema node_modules/wrangler/config-schema.json
+# ============================================================
+# wrangler.toml · cloudflare worker config
+# ============================================================
+# DEPLOY:
+#   1. install wrangler:           npm install -g wrangler
+#   2. login:                      wrangler login
+#   3. create the D1 database:     wrangler d1 create ad-generator-db
+#      → copy the database_id printed and paste below
+#   4. apply schema:               wrangler d1 execute ad-generator-db --file=../schema.sql
+#   5. set secrets (week 2):       wrangler secret put FAL_API_KEY
+#                                  wrangler secret put ANTHROPIC_API_KEY
+#   6. deploy:                     wrangler deploy
+# ============================================================
+
+name = "ad-generator"
+main = "src/index.js"
+compatibility_date = "2025-09-01"
+compatibility_flags = ["nodejs_compat"]
+
+# the *.workers.dev URL is fine for week 1
+# for production, route a real domain here later
+workers_dev = true
+
+# ============================================================
+# D1 · sqlite at the edge
+# ============================================================
+# create with: wrangler d1 create ad-generator-db
+# paste the printed database_id here
+# ============================================================
+
+[[d1_databases]]
+binding = "DB"
+database_name = "ad-generator-db"
+database_id = "REPLACE_WITH_DATABASE_ID_FROM_WRANGLER_CREATE"
+
+# ============================================================
+# R2 · object storage for generated images (week 2+)
+# ============================================================
+# create with: wrangler r2 bucket create ad-generator-images
+# uncomment when you start storing generated outputs
+# ============================================================
+
+# [[r2_buckets]]
+# binding = "IMAGES"
+# bucket_name = "ad-generator-images"
+
+# ============================================================
+# secrets (set via CLI · NEVER commit to git)
+# ============================================================
+# wrangler secret put FAL_API_KEY
+# wrangler secret put ANTHROPIC_API_KEY
+# ============================================================
+
+# ============================================================
+# observability (free, useful)
+# ============================================================
+
+[observability]
+enabled = true
