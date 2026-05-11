@@ -1,0 +1,28 @@
+# dependencies
+node_modules/
+worker/node_modules/
+
+# wrangler
+.wrangler/
+worker/.wrangler/
+.dev.vars
+worker/.dev.vars
+
+# environment / secrets · NEVER commit these
+.env
+.env.local
+*.env
+
+# logs
+*.log
+npm-debug.log*
+
+# editor
+.vscode/
+.idea/
+*.swp
+.DS_Store
+
+# build (none for now, but future-proof)
+dist/
+build/
