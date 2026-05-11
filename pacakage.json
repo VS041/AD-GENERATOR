@@ -1,0 +1,17 @@
+{
+  "name": "ad-generator-worker",
+  "version": "0.1.0",
+  "description": "Cloudflare Worker backend for ad-generator",
+  "private": true,
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "tail": "wrangler tail",
+    "db:create": "wrangler d1 create ad-generator-db",
+    "db:migrate": "wrangler d1 execute ad-generator-db --file=../schema.sql",
+    "db:migrate:remote": "wrangler d1 execute ad-generator-db --remote --file=../schema.sql"
+  },
+  "devDependencies": {
+    "wrangler": "^3.90.0"
+  }
+}
